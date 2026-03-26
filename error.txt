@@ -1,23 +1,11 @@
-E:\gemini-movie\valokuy>npm run build
-
-> valorhub@0.1.0 build
-> next build
-
-   ▲ Next.js 15.0.3
-
-   Creating an optimized production build ...
- ✓ Compiled successfully
-   Linting and checking validity of types  ..Failed to compile.
-
-.next/types/app/maps/[uuid]/page.ts:34:29
-Type error: Type '{ params: { uuid: string; }; }' does not satisfy the constraint 'PageProps'.
-  Types of property 'params' are incompatible.
-    Type '{ uuid: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
-
-  32 |
-  33 | // Check the prop type of the entry function
-> 34 | checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
-     |                             ^
-  35 |
-  36 | // Check the arguments and return type of the generateMetadata function
-  37 | if ('generateMetadata' in entry) {
+Installing dependencies...
+npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: @react-three/drei@10.7.7
+npm error Found: react@19.0.0-rc-66855b96-20241106
+npm error node_modules/react
+npm error   react@"19.0.0-rc-66855b96-20241106" from the root project
+npm error   peer react@"^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc" from lucide-react@0.456.0
+npm error   node_modules/lucide-react
+npm error     lucide-react@"^0.456.0" from the root project
