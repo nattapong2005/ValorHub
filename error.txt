@@ -1,34 +1,23 @@
-E:\gemini-movie\valokuy>npm i framer-motion
-npm error code ERESOLVE
-npm error ERESOLVE could not resolve
-npm error
-npm error While resolving: framer-motion@12.38.0
-npm error Found: react@19.0.0-rc-66855b96-20241106
-npm error node_modules/react
-npm error   peer react@"^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc" from lucide-react@0.456.0
-npm error   node_modules/lucide-react
-npm error     lucide-react@"^0.456.0" from the root project
-npm error   peer react@"^18.2.0 || 19.0.0-rc-66855b96-20241106" from next@15.0.3
-npm error   node_modules/next
-npm error     next@"15.0.3" from the root project
-npm error   3 more (react-dom, styled-jsx, the root project)
-npm error
-npm error Could not resolve dependency:
-npm error peerOptional react@"^18.0.0 || ^19.0.0" from framer-motion@12.38.0
-npm error node_modules/framer-motion
-npm error   framer-motion@"*" from the root project
-npm error
-npm error Conflicting peer dependency: react@19.2.4
-npm error node_modules/react
-npm error   peerOptional react@"^18.0.0 || ^19.0.0" from framer-motion@12.38.0
-npm error   node_modules/framer-motion
-npm error     framer-motion@"*" from the root project
-npm error
-npm error Fix the upstream dependency conflict, or retry
-npm error this command with --force or --legacy-peer-deps
-npm error to accept an incorrect (and potentially broken) dependency resolution.
-npm error
-npm error
-npm error For a full report see:
-npm error C:\Users\pc\AppData\Local\npm-cache\_logs\2026-03-26T09_42_54_091Z-eresolve-report.txt
-npm error A complete log of this run can be found in: C:\Users\pc\AppData\Local\npm-cache\_logs\2026-03-26T09_42_54_091Z-debug-0.log
+E:\gemini-movie\valokuy>npm run build
+
+> valorhub@0.1.0 build
+> next build
+
+   ▲ Next.js 15.0.3
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types  ..Failed to compile.
+
+.next/types/app/maps/[uuid]/page.ts:34:29
+Type error: Type '{ params: { uuid: string; }; }' does not satisfy the constraint 'PageProps'.
+  Types of property 'params' are incompatible.
+    Type '{ uuid: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+
+  32 |
+  33 | // Check the prop type of the entry function
+> 34 | checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
+     |                             ^
+  35 |
+  36 | // Check the arguments and return type of the generateMetadata function
+  37 | if ('generateMetadata' in entry) {

@@ -3,8 +3,9 @@ import Link from "next/link";
 import { getMap } from "@/lib/api";
 import { ChevronLeft, MapPin } from "lucide-react";
 
-export default async function MapDetailPage({ params }: { params: { uuid: string } }) {
-  const map = await getMap(params.uuid);
+export default async function MapDetailPage({ params }: { params: Promise<{ uuid: string }> }) {
+  const { uuid } = await params;
+  const map = await getMap(uuid);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">

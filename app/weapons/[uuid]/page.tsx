@@ -3,8 +3,9 @@ import Link from "next/link";
 import { getWeapon } from "@/lib/api";
 import { ChevronLeft } from "lucide-react";
 
-export default async function WeaponDetailPage({ params }: { params: { uuid: string } }) {
-  const weapon = await getWeapon(params.uuid);
+export default async function WeaponDetailPage({ params }: { params: Promise<{ uuid: string }> }) {
+  const { uuid } = await params;
+  const weapon = await getWeapon(uuid);
   
   const categoryMap: { [key: string]: string } = {
     "EEquippableCategory::Sidearm": "ปืนพก (Sidearms)",
