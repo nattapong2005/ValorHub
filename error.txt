@@ -1,11 +1,1 @@
-Installing dependencies...
-npm error code ERESOLVE
-npm error ERESOLVE could not resolve
-npm error
-npm error While resolving: @react-three/drei@10.7.7
-npm error Found: react@19.0.0-rc-66855b96-20241106
-npm error node_modules/react
-npm error   react@"19.0.0-rc-66855b96-20241106" from the root project
-npm error   peer react@"^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc" from lucide-react@0.456.0
-npm error   node_modules/lucide-react
-npm error     lucide-react@"^0.456.0" from the root project
+Error: Vulnerable version of Next.js detected, please update immediately. Learn More: https://vercel.link/CVE-2025-66478
