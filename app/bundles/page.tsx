@@ -1,9 +1,25 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getBundles } from "@/lib/api";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default async function BundlesPage() {
+export default async function BundlesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const page = typeof resolvedSearchParams.page === "string" ? parseInt(resolvedSearchParams.page, 10) : 1;
+  const limit = 10;
+
   const allBundles = await getBundles();
-  const bundles = allBundles.filter((b: any) => b.displayIcon).reverse();
+  const validBundles = allBundles.filter((b: any) => b.displayIcon).reverse();
+  
+  const totalItems = validBundles.length;
+  const totalPages = Math.ceil(totalItems / limit);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const bundles = validBundles.slice(startIndex, endIndex);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -37,6 +53,32 @@ export default async function BundlesPage() {
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-16 flex items-center justify-center gap-4">
+          <Link
+            href={`?page=${Math.max(1, page - 1)}`}
+            className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page <= 1 ? "opacity-50 pointer-events-none" : ""}`}
+            aria-disabled={page <= 1}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Link>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold">{page}</span>
+            <span className="text-foreground/50">/</span>
+            <span className="text-foreground/50">{totalPages}</span>
+          </div>
+
+          <Link
+            href={`?page=${Math.min(totalPages, page + 1)}`}
+            className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page >= totalPages ? "opacity-50 pointer-events-none" : ""}`}
+            aria-disabled={page >= totalPages}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

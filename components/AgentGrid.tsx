@@ -23,8 +23,8 @@ export default function AgentGrid({ agents }: { agents: any[] }) {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 md:gap-x-8 gap-y-10 md:gap-y-16">
         {agents.map((agent: any) => (
-          <div 
-            key={agent.uuid} 
+          <div
+            key={agent.uuid}
             className="group cursor-pointer animate-in fade-in zoom-in-95 duration-500"
             onClick={() => setSelectedAgent(agent)}
           >
@@ -36,7 +36,7 @@ export default function AgentGrid({ agents }: { agents: any[] }) {
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-              
+
               <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6">
                 <span className="text-[10px] md:text-xs font-bold tracking-widest text-accent uppercase flex items-center gap-2">
                   {agent.role?.displayIcon && (
@@ -47,7 +47,7 @@ export default function AgentGrid({ agents }: { agents: any[] }) {
                 <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none mt-1 group-hover:translate-x-2 transition-transform">{agent.displayName}</h3>
               </div>
             </div>
-            
+
             <div className="mt-4 md:mt-6 flex gap-2 md:gap-3 overflow-x-auto pb-2 no-scrollbar">
               {agent.abilities.map((ability: any) => (
                 ability.displayIcon && (
@@ -68,19 +68,19 @@ export default function AgentGrid({ agents }: { agents: any[] }) {
 
       {/* Modal Overlay */}
       {selectedAgent && (
-        <div 
+        <div
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-10"
         >
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-background/90 backdrop-blur-md transition-opacity"
             onClick={closeModal}
           />
-          
+
           {/* Modal Content */}
           <div className="relative w-full max-w-6xl max-h-[90vh] bg-zinc-950 border border-white/10 shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in-95 duration-300">
             {/* Close Button */}
-            <button 
+            <button
               onClick={closeModal}
               className="absolute top-4 right-4 z-[70] p-2 bg-black/50 hover:bg-accent text-white rounded-full transition-colors backdrop-blur-md border border-white/10"
             >

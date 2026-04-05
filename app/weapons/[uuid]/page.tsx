@@ -1,10 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getWeapon } from "@/lib/api";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default async function WeaponDetailPage({ params }: { params: Promise<{ uuid: string }> }) {
+export default async function WeaponDetailPage({ 
+  params,
+  searchParams
+}: { 
+  params: Promise<{ uuid: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { uuid } = await params;
+  const resolvedSearchParams = await searchParams;
+  const page = typeof resolvedSearchParams.page === "string" ? parseInt(resolvedSearchParams.page, 10) : 1;
+  const limit = 12;
+
   const weapon = await getWeapon(uuid);
   
   const categoryMap: { [key: string]: string } = {
@@ -22,6 +32,12 @@ export default async function WeaponDetailPage({ params }: { params: Promise<{ u
     !skin.displayName.includes("Random") && 
     !skin.displayName.includes("สุ่ม")
   );
+
+  const totalItems = filteredSkins.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedSkins = filteredSkins.slice(startIndex, endIndex);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -86,12 +102,12 @@ export default async function WeaponDetailPage({ params }: { params: Promise<{ u
       {/* Skins Section */}
       <div>
         <div className="flex items-center gap-6 mb-12">
-          <h2 className="text-3xl font-black uppercase tracking-tight">สกินทั้งหมด ({filteredSkins.length})</h2>
+          <h2 className="text-3xl font-black uppercase tracking-tight">สกินทั้งหมด ({totalItems})</h2>
           <div className="h-[1px] flex-grow bg-white/10"></div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredSkins.map((skin: any) => (
+          {paginatedSkins.map((skin: any) => (
             <div 
               key={skin.uuid} 
               className="group p-8 bg-white/[0.02] border border-white/5 hover:border-accent/30 transition-all duration-500 flex flex-col items-center justify-center text-center relative overflow-hidden"
@@ -113,6 +129,32 @@ export default async function WeaponDetailPage({ params }: { params: Promise<{ u
             </div>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-16 flex items-center justify-center gap-4">
+            <Link
+              href={`?page=${Math.max(1, page - 1)}`}
+              className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page <= 1 ? "opacity-50 pointer-events-none" : ""}`}
+              aria-disabled={page <= 1}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </Link>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold">{page}</span>
+              <span className="text-foreground/50">/</span>
+              <span className="text-foreground/50">{totalPages}</span>
+            </div>
+
+            <Link
+              href={`?page=${Math.min(totalPages, page + 1)}`}
+              className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page >= totalPages ? "opacity-50 pointer-events-none" : ""}`}
+              aria-disabled={page >= totalPages}
+            >
+              <ChevronRight className="w-6 h-6" />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

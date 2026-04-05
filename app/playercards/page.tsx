@@ -6,18 +6,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export default async function PlayerCardsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const params = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const page = typeof resolvedSearchParams.page === "string" ? parseInt(resolvedSearchParams.page, 10) : 1;
+  const limit = 24;
+  
   const allCards = await getPlayerCards();
   
-  const page = Math.max(1, parseInt(params.page || "1"));
-  const pageSize = 24;
-  const totalPages = Math.ceil(allCards.length / pageSize);
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize;
+  const totalItems = allCards.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / limit));
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
   
-  const cards = allCards.slice(start, end);
+  const cards = allCards.slice(startIndex, endIndex);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-20 min-h-screen">
@@ -26,12 +28,8 @@ export default async function PlayerCardsPage({
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-accent leading-none">เพลเยอร์การ์ด</h1>
           <p className="text-foreground/50 max-w-xl text-lg font-light leading-relaxed">
             สะสมและเลือกใช้งานการ์ดประจำตัวเพื่อแสดงตัวตนของคุณในสมรภูมิ Valorant 
-            <span className="block mt-2 text-xs font-bold uppercase tracking-[0.2em] text-white/20">Showing {start + 1}-{Math.min(end, allCards.length)} of {allCards.length} Cards</span>
           </p>
         </div>
-        
-        {/* Top Pagination for easy access */}
-        <PaginationControls currentPage={page} totalPages={totalPages} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -84,47 +82,31 @@ export default async function PlayerCardsPage({
         </div>
       )}
 
-      {/* Bottom Pagination */}
-      <div className="mt-20 pt-10 border-t border-white/5 flex justify-center">
-        <PaginationControls currentPage={page} totalPages={totalPages} />
-      </div>
+      {totalPages > 1 && (
+        <div className="mt-16 flex items-center justify-center gap-4">
+          <Link
+            href={`?page=${Math.max(1, page - 1)}`}
+            className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page <= 1 ? "opacity-50 pointer-events-none" : ""}`}
+            aria-disabled={page <= 1}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Link>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold">{page}</span>
+            <span className="text-foreground/50">/</span>
+            <span className="text-foreground/50">{totalPages}</span>
+          </div>
+
+          <Link
+            href={`?page=${Math.min(totalPages, page + 1)}`}
+            className={`p-3 border border-white/10 hover:border-accent/50 hover:text-accent transition-all duration-300 bg-white/[0.02] flex items-center justify-center ${page >= totalPages ? "opacity-50 pointer-events-none" : ""}`}
+            aria-disabled={page >= totalPages}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </Link>
+        </div>
+      )}
     </div>
   );
-}
-
-function PaginationControls({ currentPage, totalPages }: { currentPage: number; totalPages: number }) {
-  return (
-    <div className="flex items-center gap-4">
-      <Link
-        href={currentPage > 1 ? `/playercards?page=${currentPage - 1}` : "#"}
-        className={cn(
-          "p-4 bg-white/5 border border-white/10 transition-all hover:bg-accent hover:border-accent group",
-          currentPage <= 1 && "opacity-20 pointer-events-none"
-        )}
-      >
-        <ChevronLeft size={20} className="group-hover:scale-110 transition-transform" />
-      </Link>
-      
-      <div className="flex flex-col items-center min-w-[100px]">
-        <span className="text-2xl font-black italic tracking-tighter leading-none">
-          {currentPage < 10 ? `0${currentPage}` : currentPage}
-        </span>
-        <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/20 mt-1">Of {totalPages} Pages</span>
-      </div>
-
-      <Link
-        href={currentPage < totalPages ? `/playercards?page=${currentPage + 1}` : "#"}
-        className={cn(
-          "p-4 bg-white/5 border border-white/10 transition-all hover:bg-accent hover:border-accent group",
-          currentPage >= totalPages && "opacity-20 pointer-events-none"
-        )}
-      >
-        <ChevronRight size={20} className="group-hover:scale-110 transition-transform" />
-      </Link>
-    </div>
-  );
-}
-
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(" ");
 }
